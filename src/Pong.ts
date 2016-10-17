@@ -2,16 +2,23 @@ import {Vector} from "./Vector";
 import {Rectangle} from "./Rectangle";
 import {Ball} from "./Ball";
 import {Player} from "./Player";
+import {PongState} from "./PongState";
 
 export class Pong {
     canvas: HTMLCanvasElement;
     context : CanvasRenderingContext2D;
     ball: Ball;
-    players: Player[]
+    players: Player[];
+    state: PongState;
+    pausedBallVelocity: Vector;
+
 
     constructor(canvas: HTMLCanvasElement) {
         this.canvas = canvas;
         this.context = this.canvas.getContext("2d");
+
+        this.pausedBallVelocity = new Vector();
+        
         this.ball = new Ball();
 
         this.players = [
@@ -58,6 +65,7 @@ export class Pong {
     }
 
     reset(): void {
+        this.state = PongState.Stopped;
         this.ball.position.x = this.canvas.width / 2;
         this.ball.position.y = this.canvas.height / 2;
         this.ball.velocity.x = 0;
@@ -65,9 +73,30 @@ export class Pong {
     }
 
     start(): void {
-        if (this.ball.velocity.x === 0 && this.ball.velocity.y === 0) {
+        
+        if (this.state === PongState.Stopped) {
+            this.state = PongState.Playing;
             this.ball.velocity.x = 300;
             this.ball.velocity.y = 300;
+        }
+    }
+
+    resume(): void {
+        if (this.state === PongState.Paused) {
+            this.state = PongState.Playing;
+            // restore the backed up ball velocity
+            this.ball.velocity.x = this.pausedBallVelocity.x;
+            this.ball.velocity.y = this.pausedBallVelocity.y;
+        }
+    }
+
+    pause(): void {
+        if (this.state === PongState.Playing) {
+            this.state = PongState.Paused;
+            this.pausedBallVelocity.x = this.ball.velocity.x;
+            this.pausedBallVelocity.y = this.ball.velocity.y;
+            this.ball.velocity.x = 0;
+            this.ball.velocity.y = 0;
         }
     }
 

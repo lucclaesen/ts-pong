@@ -1,4 +1,5 @@
 import {Pong} from "./Pong";
+import {PongState} from "./PongState";
 
 const canvas = document.getElementById("pong") as HTMLCanvasElement;
 const pong = new Pong(canvas);
@@ -8,5 +9,15 @@ canvas.addEventListener('mousemove', event => {
 });
 
 canvas.addEventListener('click', event => {
-    pong.start();
-})
+    switch(pong.state) {
+        case PongState.Stopped:
+            pong.start();
+            break;
+        case PongState.Playing:
+            pong.pause();
+            break;
+        case PongState.Paused:
+            pong.resume();
+            break;
+    }
+});
