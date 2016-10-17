@@ -2,7 +2,10 @@ import {Pong} from "./Pong";
 import {PongState} from "./PongState";
 
 const canvas = document.getElementById("pong") as HTMLCanvasElement;
-const pong = new Pong(canvas);
+const score = document.getElementById("score") as HTMLDivElement;
+
+const pong = new Pong(canvas, score);
+
 
 canvas.addEventListener('mousemove', event => {
     pong.players[0].position.y = event.offsetY;

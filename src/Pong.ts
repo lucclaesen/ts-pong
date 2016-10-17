@@ -3,6 +3,7 @@ import {Rectangle} from "./Rectangle";
 import {Ball} from "./Ball";
 import {Player} from "./Player";
 import {PongState} from "./PongState";
+import {ScoreChart} from "./ScoreChart";
 
 export class Pong {
     canvas: HTMLCanvasElement;
@@ -11,11 +12,14 @@ export class Pong {
     players: Player[];
     state: PongState;
     pausedBallVelocity: Vector;
+    scoreChart: ScoreChart;
 
 
-    constructor(canvas: HTMLCanvasElement) {
+    constructor(canvas: HTMLCanvasElement, scoreDiv: HTMLDivElement) {
         this.canvas = canvas;
         this.context = this.canvas.getContext("2d");
+
+        this.scoreChart = new ScoreChart(scoreDiv);
 
         this.pausedBallVelocity = new Vector();
         
@@ -107,8 +111,8 @@ export class Pong {
         if (this.ball.left < 0 || this.ball.right > this.canvas.width){
             let scoringPlayerId = this.ball.velocity.x > 0 ? 0 : 1;
             this.players[scoringPlayerId].score++;
-            console.log(`player ${scoringPlayerId} raised its score to ${this.players[scoringPlayerId].score}`);
-            // this.ball.velocity.x = -this.ball.velocity.x;
+            // console.log(`player ${scoringPlayerId} raised its score to ${this.players[scoringPlayerId].score}`);
+            this.scoreChart.updateScore(scoringPlayerId, this.players[scoringPlayerId].score);
             this.reset();
         }
 
@@ -116,7 +120,7 @@ export class Pong {
             this.ball.velocity.y = -this.ball.velocity.y;
         }
 
-        this.players[1].position.y = this.ball.position.y;
+        this.repositionPlayer1();
 
         // test for collision
         this.players.forEach(p => this.collide(p, this.ball));
@@ -130,4 +134,16 @@ export class Pong {
             ball.velocity.x = -ball.velocity.x;
         }
     }
+
+    repositionPlayer1(): void {
+        if (this.ball.velocity.x === 0)
+            return;
+        if (this.ball.position.y > this.players[1].position.y) {
+            this.players[1].position.y += 3.5;
+        }
+        else if (this.ball.position.y < this.players[1].position.y) {
+            this.players[1].position.y -= 3.5;
+        }
+    }
+
 }

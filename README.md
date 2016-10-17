@@ -8,4 +8,8 @@ It uses my webpack-ts project as a template as such:
 - git remote rm origin
 
 You'll notice how the typescript - webpack - vscode setup gives a lot more development 
-support than in the orignal videa, which was the whole point of the exercise.
+support than the original author had in the video, which was the whole point of the exercise. Thank you,
+javascript language service. 
+
+Also notice hot molule reloading in action: we get change in behavior without
+needing to restart the game.
