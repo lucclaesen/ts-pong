@@ -39,6 +39,9 @@ module.exports = {
     tslint: {
         emitErrors: true,
         failOnHint: true
+    },
+    ts : {
+        configFileName : "jsconfig.json"
     }
     
 }
